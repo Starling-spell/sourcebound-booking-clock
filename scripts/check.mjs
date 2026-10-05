@@ -24,10 +24,17 @@ if (mode === '--source') {
   if (actual !== local) process.exitCode = 1;
 } else {
   if (!['--success', '--error'].includes(mode) || !/^0x[0-9a-fA-F]{64}$/.test(value ?? '')) throw Error('--success/--error HASH required');
-  const tx = await rpc('eth_getTransactionByHash', [value]);
+  let tx = await rpc('eth_getTransactionByHash', [value]);
+  // Read-only finalization polling; never re-broadcast a transaction.
+  for (let poll = 0; tx.status !== 'FINALIZED' && poll < 15; poll++) {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    tx = await rpc('eth_getTransactionByHash', [value]);
+  }
   const leader = tx.consensus_data?.leader_receipt?.find(item => item.mode === 'leader');
   const rawError = leader?.genvm_result?.stderr || leader?.result;
-  const decodedError = typeof rawError === 'string' ? Buffer.from(rawError, 'base64').toString('utf8') : '';
+  const decodedError = typeof rawError !== 'string' ? '' :
+    (/^[A-Za-z0-9+/]*={0,2}$/.test(rawError) && rawError.length % 4 === 0
+      ? Buffer.from(rawError, 'base64').toString('utf8') : rawError);
   console.log(JSON.stringify({hash: value, status: tx.status, execution: leader?.execution_result, consensus: tx.result_name,
     ...(mode === '--error' ? {decoded_error: decodedError} : {})}));
   if (tx.status !== 'FINALIZED' || leader?.execution_result !== (mode === '--error' ? 'ERROR' : 'SUCCESS')) process.exitCode = 1;
