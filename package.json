@@ -1,0 +1,8 @@
+{
+  "name": "sourcebound-booking-clock",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"view": "node scripts/view.mjs"},
+  "dependencies": {"genlayer-js": "1.1.8"}
+}

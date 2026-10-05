@@ -1,0 +1,10 @@
+SYNTHETIC DEMONSTRATION DOCUMENT. No real venue or delivery claim.
+
+Resource: Demo Observatory
+Recurring weekly opening hours, all times UTC. This timetable applies every week.
+On Mondays and Tuesdays, visitors may reserve the room from nine in the morning until noon.
+The room closes for lunch between noon and one in the afternoon, then reopens until five.
+On Wednesdays it is available from ten in the morning until two in the afternoon.
+Thursdays and Fridays follow the same hours as Monday.
+On Saturdays the only opening is from ten until twelve noon.
+The room is closed throughout Sunday. There are no holiday exceptions or additional closures.
